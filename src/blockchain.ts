@@ -198,4 +198,4 @@ class Blockchain {
   }
 }
 
-export { Blockchain, Block, Transaction };
+export { Blockchain };
