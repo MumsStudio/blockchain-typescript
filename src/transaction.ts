@@ -4,12 +4,13 @@ const crypto = require("crypto");
 
 export class Transaction {
   public signature;
-  public timestamp;
+  public timestamp: number;
 
-  constructor(public fromAddress, public toAddress, public amount) {
-    this.fromAddress = fromAddress;
-    this.toAddress = toAddress;
-    this.amount = amount;
+  constructor(
+    public fromAddress: string,
+    public toAddress: string,
+    public amount: number
+  ) {
     this.timestamp = Date.now();
   }
 
@@ -18,7 +19,7 @@ export class Transaction {
    *
    * @returns {string}
    */
-  calculateHash() {
+  calculateHash(): string {
     return crypto
       .createHash("sha256")
       .update(this.fromAddress + this.toAddress + this.amount + this.timestamp)
@@ -53,7 +54,7 @@ export class Transaction {
    *
    * @returns {boolean}
    */
-  isValid() {
+  isValid(): boolean {
     // If the transaction doesn't have a from address we assume it's a
     // mining reward and that it's valid. You could verify this in a
     // different way (special field for instance)

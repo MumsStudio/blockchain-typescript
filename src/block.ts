@@ -1,13 +1,15 @@
 import crypto from "crypto";
+import { Transaction } from "./transaction";
 
 export class Block {
-  public nonce;
-  public hash;
+  public nonce: number;
+  public hash: string;
 
-  constructor(public timestamp, public transactions, public previousHash = "") {
-    this.previousHash = previousHash;
-    this.timestamp = timestamp;
-    this.transactions = transactions;
+  constructor(
+    public timestamp: number,
+    public transactions: Transaction[],
+    public previousHash: string
+  ) {
     this.nonce = 0;
     this.hash = this.calculateHash();
   }
@@ -18,7 +20,7 @@ export class Block {
    *
    * @returns {string}
    */
-  calculateHash() {
+  calculateHash(): string {
     return crypto
       .createHash("sha256")
       .update(
@@ -36,7 +38,7 @@ export class Block {
    *
    * @param {number} difficulty
    */
-  mineBlock(difficulty) {
+  mineBlock(difficulty: number): void {
     while (
       this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
     ) {
@@ -53,7 +55,7 @@ export class Block {
    *
    * @returns {boolean}
    */
-  hasValidTransactions() {
+  hasValidTransactions(): boolean {
     for (const tx of this.transactions) {
       if (!tx.isValid()) {
         return false;

@@ -2,11 +2,11 @@ import { Block } from "./block";
 import { Transaction } from "./transaction";
 
 class Blockchain {
-  public chain;
-  public difficulty;
+  public chain: Block[];
+  public difficulty: number;
 
-  public pendingTransactions;
-  public miningReward;
+  public pendingTransactions: Transaction[];
+  public miningReward: number;
 
   constructor() {
     this.chain = [this.createGenesisBlock()];
@@ -18,7 +18,7 @@ class Blockchain {
   /**
    * @returns {Block}
    */
-  createGenesisBlock() {
+  createGenesisBlock(): Block {
     return new Block(Date.parse("2017-01-01"), [], "0");
   }
 
@@ -26,9 +26,9 @@ class Blockchain {
    * Returns the latest block on our chain. Useful when you want to create a
    * new Block and you need the hash of the previous Block.
    *
-   * @returns {Block[]}
+   * @returns {Block}
    */
-  getLatestBlock() {
+  getLatestBlock(): Block {
     return this.chain[this.chain.length - 1];
   }
 
@@ -39,7 +39,7 @@ class Blockchain {
    *
    * @param {string} miningRewardAddress
    */
-  minePendingTransactions(miningRewardAddress) {
+  minePendingTransactions(miningRewardAddress: string) {
     const rewardTx = new Transaction(
       null,
       miningRewardAddress,
@@ -67,12 +67,12 @@ class Blockchain {
    *
    * @param {Transaction} transaction
    */
-  addTransaction(transaction) {
+  addTransaction(transaction: Transaction) {
     if (!transaction.fromAddress || !transaction.toAddress) {
       throw new Error("Transaction must include from and to address");
     }
 
-    // Verify the transactiion
+    // Verify the transaction
     if (!transaction.isValid()) {
       throw new Error("Cannot add invalid transaction to chain");
     }
@@ -118,7 +118,7 @@ class Blockchain {
    * @param {string} address
    * @returns {number} The balance of the wallet
    */
-  getBalanceOfAddress(address) {
+  getBalanceOfAddress(address: string): number {
     let balance = 0;
 
     for (const block of this.chain) {
@@ -144,7 +144,7 @@ class Blockchain {
    * @param  {string} address
    * @return {Transaction[]}
    */
-  getAllTransactionsForWallet(address) {
+  getAllTransactionsForWallet(address: string): Transaction[] {
     const txs = [];
 
     for (const block of this.chain) {
@@ -166,7 +166,7 @@ class Blockchain {
    *
    * @returns {boolean}
    */
-  isChainValid() {
+  isChainValid(): boolean {
     // Check if the Genesis block hasn't been tampered with by comparing
     // the output of createGenesisBlock with the first block on our chain
     const realGenesis = JSON.stringify(this.createGenesisBlock());
